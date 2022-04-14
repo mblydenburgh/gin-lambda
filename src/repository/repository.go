@@ -25,3 +25,30 @@ func AddUser(item UserItem) (string, error) {
 	return item.UserId, nil
 
 }
+
+func GetUser(id string) (*UserItem, error) {
+	log.Printf("Looking up user id %v", id)
+	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
+	tableName := os.Getenv("TABLE_NAME")
+	table := client.Table(tableName)
+
+	var result UserItem
+	rangeKey := "User#"
+	err := table.Get("UserId", id).Range("ModelTypeAndId", dynamo.BeginsWith, rangeKey).One(&result)
+	if err != nil {
+		log.Println("Error performing getItem operation")
+		log.Println(err)
+		return nil, err
+	}
+
+	log.Println("found car")
+	return &result, nil
+}
+
+func GetAllUsers() ([]UserItem, error) {
+
+}
+
+func DeleteUser(id string) (string, error) {
+
+}
