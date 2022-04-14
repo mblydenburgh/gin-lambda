@@ -46,11 +46,39 @@ func GetUser(id string) (*UserItem, error) {
 }
 
 /*
-func GetAllUsers() ([]UserItem, error) {
+func GetAllUsers() ([]*UserItem, error) {
+	log.Printf("Returning all users")
+	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
+	tableName := os.Getenv("TABLE_NAME")
+	table := client.Table(tableName)
 
-}
+	rangeKey := "User#"
+	err := table.Get("UserId", id).Range("ModelTypeAndId", dynamo.BeginsWith, rangeKey)
+	if err != nil {
+		log.Println("Error performing getItem operation")
+		log.Println(err)
+		return nil, err
+	}
 
-func DeleteUser(id string) (string, error) {
+	log.Println("Found user")
+	return &result, nil
 
 }
 */
+func DeleteUser(id string) (string, error) {
+	log.Printf("Looking up user id %v", id)
+	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
+	tableName := os.Getenv("TABLE_NAME")
+	table := client.Table(tableName)
+
+	deleteAction := table.Delete("UserId", id)
+
+	err := deleteAction.Run()
+
+	if err != nil {
+		log.Printf("Error running delete action")
+		return "", err
+	}
+	log.Printf("Delete successful")
+	return id, nil
+}
