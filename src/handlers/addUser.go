@@ -14,10 +14,22 @@ func AddUser(c *gin.Context) {
 	var newUser AddUserPayload
 	err := c.Bind(&newUser)
 
+	// If there is no error from binding incoming json to struct, continue
 	if err == nil {
 		log.Printf("parsed payload: %+v\n", newUser)
-		c.JSON(http.StatusCreated, gin.H{"userId": "029381"})
+
+		// Call private method that interacts with ddb
+		userId, err := addUser(newUser)
+
+		// If no error, continue
+		if err == nil {
+			c.JSON(http.StatusCreated, gin.H{"userId": userId})
+		} else {
+			// Error with addUser method
+			c.Error(err)
+		}
 	} else {
+		// Error parsing json
 		c.Error(err)
 	}
 }
