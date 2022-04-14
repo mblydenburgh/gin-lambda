@@ -71,7 +71,7 @@ func DeleteUser(id string) (string, error) {
 	tableName := os.Getenv("TABLE_NAME")
 	table := client.Table(tableName)
 
-	deleteAction := table.Delete("UserId", id)
+	deleteAction := table.Delete("UserId", id).Range("ModelTypeAndId", "User#"+id)
 
 	err := deleteAction.Run()
 
