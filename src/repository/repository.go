@@ -45,26 +45,25 @@ func GetUser(id string) (*UserItem, error) {
 	return &result, nil
 }
 
-/*
-func GetAllUsers() ([]*UserItem, error) {
+func GetAllUsers() (*[]UserItem, error) {
 	log.Printf("Returning all users")
 	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
 	tableName := os.Getenv("TABLE_NAME")
 	table := client.Table(tableName)
+	var result []UserItem
 
 	rangeKey := "User#"
-	err := table.Get("UserId", id).Range("ModelTypeAndId", dynamo.BeginsWith, rangeKey)
+	err := table.Scan().Index("modelTypeAndId").Filter("ModelTypeAndId", dynamo.BeginsWith, rangeKey).All(&result)
 	if err != nil {
 		log.Println("Error performing getItem operation")
 		log.Println(err)
 		return nil, err
 	}
 
-	log.Println("Found user")
 	return &result, nil
 
 }
-*/
+
 func DeleteUser(id string) (string, error) {
 	log.Printf("Looking up user id %v", id)
 	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})

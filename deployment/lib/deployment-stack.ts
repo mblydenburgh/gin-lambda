@@ -2,7 +2,7 @@ import cdk = require('@aws-cdk/core');
 import { Code, Function, Runtime } from "@aws-cdk/aws-lambda"
 import { Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam';
 import { CorsHttpMethod, HttpApi, HttpMethod } from "@aws-cdk/aws-apigatewayv2"
-import { Table, AttributeType, BillingMode } from "@aws-cdk/aws-dynamodb"
+import { Table, AttributeType, BillingMode, ProjectionType } from "@aws-cdk/aws-dynamodb"
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations"
 
 export class DeploymentStack extends cdk.Stack {
@@ -18,6 +18,12 @@ export class DeploymentStack extends cdk.Stack {
             sortKey: { name: "ModelTypeAndId", type: AttributeType.STRING },
             billingMode: BillingMode.PAY_PER_REQUEST
     })
+    dynamoTable.addGlobalSecondaryIndex({
+      indexName: "modelTypeAndIdIndex",
+      projectionType: ProjectionType.ALL,
+      partitionKey: {name: "modelTypeAndId", type: AttributeType.STRING},
+    })
+
 
     //@ts-ignore
     const lambdaRole = new Role(this, `LambdaRole`, {
