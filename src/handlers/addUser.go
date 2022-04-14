@@ -37,13 +37,16 @@ func AddUser(c *gin.Context) {
 func addUser(newUser AddUserPayload) (string, error) {
 	uuid := uuid.NewV4().String()
 	modelTypeAndId := "User#" + uuid
+	format := "2006-01-02"
+	dob := newUser.DateOfBirth.Format(format)
+	log.Printf("Formatted dob %v", dob)
 	item := repository.UserItem{
 		UserId:         uuid,
 		ModelTypeAndId: modelTypeAndId,
 		FirstName:      newUser.FirstName,
 		LastName:       newUser.LastName,
 		UserName:       newUser.UserName,
-		DateOfBirth:    newUser.DateOfBirth.String(),
+		DateOfBirth:    dob,
 	}
 
 	createdId, err := repository.AddUser(item)

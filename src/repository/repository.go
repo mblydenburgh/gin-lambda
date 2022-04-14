@@ -41,7 +41,7 @@ func GetUser(id string) (*UserItem, error) {
 		return nil, err
 	}
 
-	log.Println("found car")
+	log.Println("Found user")
 	return &result, nil
 }
 
