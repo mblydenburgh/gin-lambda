@@ -45,6 +45,7 @@ func GetUser(id string) (*UserItem, error) {
 	return &result, nil
 }
 
+/*
 func GetAllUsers() ([]UserItem, error) {
 
 }
@@ -52,3 +53,4 @@ func GetAllUsers() ([]UserItem, error) {
 func DeleteUser(id string) (string, error) {
 
 }
+*/
