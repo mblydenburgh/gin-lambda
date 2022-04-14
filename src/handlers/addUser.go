@@ -9,9 +9,12 @@ import (
 
 func AddUser(c *gin.Context) {
 	var newUser AddUserPayload
-	c.Bind(&newUser)
+	err := c.Bind(&newUser)
 
-	fmt.Printf("payload: %v", newUser)
+	if err != nil {
+		fmt.Printf("parsed payload: %+v\n", newUser)
+		c.JSON(http.StatusCreated, gin.H{"userId": "029381"})
+	}
 
-	c.JSON(http.StatusCreated, gin.H{"userId": "029381"})
+	c.Error(err)
 }
