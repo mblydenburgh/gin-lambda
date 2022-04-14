@@ -1,9 +1,8 @@
 import cdk = require('@aws-cdk/core');
-import { Stack, StackProps } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
 import { Code, Function, Runtime } from "@aws-cdk/aws-lambda"
 import { Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam';
 import { CorsHttpMethod, HttpApi, HttpMethod } from "@aws-cdk/aws-apigatewayv2"
+import { Table, AttributeType, BillingMode } from "@aws-cdk/aws-dynamodb"
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations"
 
 export class DeploymentStack extends cdk.Stack {
@@ -13,6 +12,14 @@ export class DeploymentStack extends cdk.Stack {
     const appName = "gin-lambda"
 
     //@ts-ignore
+    const dynamoTable = new Table(this, `DynamoTable`, {
+            tableName: `${appName}-table`,
+            partitionKey: { name: "UserId", type: AttributeType.STRING },
+            sortKey: { name: "ModelTypeAndId", type: AttributeType.STRING },
+            billingMode: BillingMode.PAY_PER_REQUEST
+    })
+
+    //@ts-ignore
     const lambdaRole = new Role(this, `LambdaRole`, {
             roleName: `${appName}-role`,
             assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
@@ -20,6 +27,21 @@ export class DeploymentStack extends cdk.Stack {
               ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole")
             ]
     })
+    dynamoTable.grantReadWriteData(lambdaRole)
+        lambdaRole.addToPolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: [
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+            ],
+            resources: [
+                `arn:aws:dynamodb:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:table/${dynamoTable.tableName}/index/*`
+            ]
+        }))
 
     //@ts-ignore
     const lambdaFunction = new Function(this, `LambdaFunction`, {
