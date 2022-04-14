@@ -17,8 +17,9 @@ func User(c *gin.Context) {
 		userItem, err := repository.GetUser(id)
 
 		if err == nil {
+			format := "2006-01-02"
 			//Return user
-			dob, err := time.Parse("1989-02-19T00:00:00Z", userItem.DateOfBirth)
+			dob, err := time.Parse(format, userItem.DateOfBirth)
 			if err == nil {
 				user := UserResponse{
 					UserId:      userItem.UserId,
