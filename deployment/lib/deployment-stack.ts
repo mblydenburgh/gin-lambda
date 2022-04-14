@@ -49,7 +49,10 @@ export class DeploymentStack extends cdk.Stack {
             runtime: Runtime.GO_1_X,
             role: lambdaRole,
             code: Code.fromAsset("../src/bin/main.zip"),
-            handler: "main"
+            handler: "main",
+            environment: {
+              "TABLE_NAME": "gin-lambda-table"
+            }
     })
 
     lambdaFunction.grantInvoke(new ServicePrincipal("apigateway.amazonaws.com"))
