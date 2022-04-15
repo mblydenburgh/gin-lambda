@@ -59,10 +59,8 @@ func GetAllUsers() (*[]UserItem, error) {
 		log.Println(err)
 		return nil, err
 	}
-	log.Printf("results: %+v", result)
 
 	return &result, nil
-
 }
 
 func DeleteUser(id string) (string, error) {
@@ -82,3 +80,38 @@ func DeleteUser(id string) (string, error) {
 	log.Printf("Delete successful")
 	return id, nil
 }
+
+func AddCar(newCar CarItem) (string, error) {
+	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
+	tableName := os.Getenv("TABLE_NAME")
+	table := client.Table(tableName)
+	putAction := table.Put(newCar)
+	if err := putAction.Run(); err != nil {
+		log.Printf("Error performing put operation on table")
+		return "", err
+	}
+
+	return newCar.VIN, nil
+}
+
+/*
+func GetCar(vin string) (CarItem, error) {
+	log.Printf("Looking up car by vin %v", vin)
+	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
+	tableName := os.Getenv("TABLE_NAME")
+	table := client.Table(tableName)
+
+	var result UserItem
+	rangeKey := "Car#"
+	err := table.Get("UserId", vin).Range("ModelTypeAndId", dynamo.BeginsWith, rangeKey).One(&result)
+	if err != nil {
+		log.Println("Error performing getItem operation")
+		log.Println(err)
+		return nil, err
+	}
+
+	log.Println("Found user")
+	return &result, nil
+
+}
+*/

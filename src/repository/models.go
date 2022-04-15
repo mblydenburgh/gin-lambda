@@ -10,13 +10,13 @@ type UserItem struct {
 }
 
 type CarItem struct {
-	UserId         string
-	ModelTypeAndId string
-	Manufacturer   string
-	Model          string
-	Trim           string
-	Year           int32
-	VehicleType    string
-	Color          string
-	VIN            string
+	UserId         string `dynamo:"UserId, hash"`
+	ModelTypeAndId string `dynamo:"ModelTypeAndId, range"`
+	Manufacturer   string `dynamo:"Manufacturer"`
+	Model          string `dynamo:"Model"`
+	Trim           string `dynamo:"Trim"`
+	Year           int32  `dynamo:"Year"`
+	VehicleType    string `dynamo:"Vehicle Type"`
+	Color          string `dynamo:"Color"`
+	VIN            string `dynamo:"VIN"`
 }
