@@ -53,7 +53,7 @@ func GetAllUsers() (*[]UserItem, error) {
 	var result []UserItem
 
 	rangeKey := "User#"
-	err := table.Scan().Index("modelTypeAndIdIndex").Filter("ModelTypeAndId", dynamo.BeginsWith, rangeKey).All(&result)
+	err := table.Scan().Filter("ModelTypeAndId", dynamo.BeginsWith, rangeKey).All(&result)
 	if err != nil {
 		log.Println("Error performing getItem operation")
 		log.Println(err)
