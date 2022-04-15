@@ -22,17 +22,14 @@ func setupRouter() *gin.Engine {
 
 	r := gin.Default()
 
-	r.GET("/hello-world", handlers.Hello)
-
-	r.GET("/hello-world/:name", handlers.NameHandler)
-
 	r.GET("/users", handlers.AllUsers)
-
 	r.GET("/users/:id", handlers.User)
-
 	r.POST("users", handlers.AddUser)
-
 	r.DELETE("users/:id", handlers.RemoveUser)
+
+	//r.GET("/cars/:vin", handlers.Car)
+	//r.POST("cars", handlers.AddCar)
+	//r.DELETE("cars/:vin", handlers.RemoveCar)
 
 	return r
 }
