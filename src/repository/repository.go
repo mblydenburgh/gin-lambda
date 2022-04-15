@@ -111,3 +111,25 @@ func GetCar(vin string) (*CarItem, error) {
 	log.Println("Found user")
 	return &result, nil
 }
+
+func DeleteCar(vin string) (string, error) {
+	log.Printf("Deleting vin %v", vin)
+	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
+	tableName := os.Getenv("TABLE_NAME")
+	table := client.Table(tableName)
+
+	carToDelete, err := GetCar(vin)
+	if err == nil {
+		deleteAction := table.Delete("UserId", carToDelete.UserId).Range("ModelTypeAndId", "Car#"+carToDelete.VIN)
+		err := deleteAction.Run()
+		if err != nil {
+			log.Printf("Error running delete action")
+			return "", err
+		}
+		log.Printf("Delete successful")
+		return vin, nil
+	}
+
+	log.Printf("Could not find car with VIN %v to delete", vin)
+	return "", err
+}
