@@ -35,7 +35,7 @@ type AddCarPayload struct {
 	Model        string `json:"model"`
 	Trim         string `json:"trim"`
 	Year         int32  `json:"year"`
-	VehicleTyle  string `json:"string"`
+	VehicleTyle  string `json:"vehicleType"`
 	Color        string `json:"color"`
 	VIN          string `json:"vin"`
 }
