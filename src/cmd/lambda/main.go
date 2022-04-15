@@ -28,7 +28,7 @@ func setupRouter() *gin.Engine {
 	r.DELETE("users/:id", handlers.RemoveUser)
 
 	//r.GET("/cars/:vin", handlers.Car)
-	//r.POST("cars", handlers.AddCar)
+	r.POST("cars", handlers.AddCar)
 	//r.DELETE("cars/:vin", handlers.RemoveCar)
 
 	return r

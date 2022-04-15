@@ -94,16 +94,14 @@ func AddCar(newCar CarItem) (string, error) {
 	return newCar.VIN, nil
 }
 
-/*
-func GetCar(vin string) (CarItem, error) {
+func GetCar(vin string) (*CarItem, error) {
 	log.Printf("Looking up car by vin %v", vin)
 	client := dynamo.New(session.New(), &aws.Config{Region: aws.String("us-east-1")})
 	tableName := os.Getenv("TABLE_NAME")
 	table := client.Table(tableName)
 
-	var result UserItem
-	rangeKey := "Car#"
-	err := table.Get("UserId", vin).Range("ModelTypeAndId", dynamo.BeginsWith, rangeKey).One(&result)
+	var result CarItem
+	err := table.Get("VIN", vin).Index("vinIndex").One(&result)
 	if err != nil {
 		log.Println("Error performing getItem operation")
 		log.Println(err)
@@ -112,6 +110,4 @@ func GetCar(vin string) (CarItem, error) {
 
 	log.Println("Found user")
 	return &result, nil
-
 }
-*/

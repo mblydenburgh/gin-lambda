@@ -18,11 +18,11 @@ export class DeploymentStack extends cdk.Stack {
             sortKey: { name: "ModelTypeAndId", type: AttributeType.STRING },
             billingMode: BillingMode.PAY_PER_REQUEST
     })
-//     dynamoTable.addGlobalSecondaryIndex({
-//      indexName: "vinIndex",
-//      projectionType: ProjectionType.ALL,
-//     partitionKey: {name: "VIN", type: AttributeType.STRING},
-//    })
+    dynamoTable.addGlobalSecondaryIndex({
+            indexName: "vinIndex",
+            projectionType: ProjectionType.ALL,
+            partitionKey: {name: "VIN", type: AttributeType.STRING},
+    })
 
 
 
