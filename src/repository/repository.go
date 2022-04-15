@@ -52,10 +52,8 @@ func GetAllUsers() (*[]UserItem, error) {
 	table := client.Table(tableName)
 	var result []UserItem
 
-	//	rangeKey := "User#"
-	//	filter := dynamo.ExpressionLiteral.Expression =
-	err := table.Scan().Index("modelTypeAndIdIndex").Filter("begins_with('ModelTypeAndId','User#')").All(&result)
-	//	err := table.Scan().Filter("ModelTypeAndId", dynamo.BeginsWith, rangeKey).All(&result)
+	rangeKey := "User#"
+	err := table.Scan().Index("modelTypeAndIdIndex").Filter("begins_with(ModelTypeAndId,?)", rangeKey).All(&result)
 	if err != nil {
 		log.Println("Error performing getItem operation")
 		log.Println(err)
